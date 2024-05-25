@@ -1,4 +1,5 @@
 #!/bin/bash
+
 echo " ██████╗ ██╗    ██╗██╗     ███████╗████████╗ █████╗ ██╗  ██╗███████╗"
 echo "██╔═══██╗██║    ██║██║     ██╔════╝╚══██╔══╝██╔══██╗██║ ██╔╝██╔════╝"
 echo "██║   ██║██║ █╗ ██║██║     ███████╗   ██║   ███████║█████╔╝ █████╗  "
@@ -6,18 +7,26 @@ echo "██║   ██║██║███╗██║██║     ╚══
 echo "╚██████╔╝╚███╔███╔╝███████╗███████║   ██║   ██║  ██║██║  ██╗███████╗"
 echo " ╚═════╝  ╚══╝╚══╝ ╚══════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝"
 echo "https://owlstake.com"
+
+set -e
+
 GREEN="\033[32m"
 NORMAL="\033[0m"
+VERSION=$1
 
-sudo apt update && sudo apt upgrade -y \
-&& sudo apt install docker.io curl -y \
-&& sudo systemctl start docker \
-&& sudo systemctl enable docker \
-&& sudo wget -O /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/v2.17.0/docker-compose-`uname -s`-`uname -m` \
-&& sudo chmod +x /usr/local/bin/docker-compose \
-&& sudo apt-get install build-essential curl libpq-dev ocaml ocamlbuild automake autoconf libtool wget python libssl-dev git cmake make perl tmux ufw gcc unzip zip jq golang-statik -y
+if [ "$VERSION" == "" ]; then
+    VERSION="3.8.5"
+fi
 
+cd \
+&& export VERSION="$VERSION" \
+&& wget https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tar.xz \
+&& tar -xvf Python-$VERSION.tar.xz \
+&& cd Python-$VERSION \
+&& sudo apt-get install zlib1g-dev \
+&& ./configure \
+&& make \
+&& make install \
+&& python3 -V
 
-echo "-------------------------------------------------------------------"
-echo -e "$GREEN ALL COMPONENTS INSTALLED.$NORMAL"
-echo "-------------------------------------------------------------------"
+echo "$GREEN--------PYTHON VERSION v$VERSION INSTALLED--------$NORMAL"
